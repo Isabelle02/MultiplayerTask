@@ -28,7 +28,7 @@ public class LobbyWindow : Window
 
     private void OnEnterLobbyClick()
     {
-        if (NetworkController.JoinLobby(_existingLobbyName.text))
+        if (NetworkController.JoinRoom(_existingLobbyName.text))
         {
             SceneHandler.Load("GameScene");
         }
@@ -40,7 +40,7 @@ public class LobbyWindow : Window
 
     private void OnCreateLobbyClick()
     {
-        if (NetworkController.JoinLobby(_newLobbyName.text))
+        if (NetworkController.JoinRoom(_newLobbyName.text))
         {
             SceneHandler.Load("GameScene");
         }

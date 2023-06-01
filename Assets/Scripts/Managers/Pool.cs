@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Photon.Pun;
+using UnityEditor;
 using UnityEngine;
 
 public class Pool : MonoBehaviour
@@ -44,9 +46,43 @@ public class Pool : MonoBehaviour
         
         return obj;
     }
+    
+    public static T GetPun<T>(Transform parent = null) where T : MonoBehaviourPun
+    {
+        var obj = PooledObjects.Find(o => o.GetType() == typeof(T)) as T;
+        if (obj == null)
+        {
+            foreach (var item in Items)
+            {
+                if (item.TryGetComponent(out T value))
+                {
+                    obj = PhotonNetwork
+                        .Instantiate(value.name, value.transform.position, value.transform.rotation)
+                        .GetComponent<T>();
+                    obj.transform.SetParent(parent);
+                    obj.gameObject.SetActive(true);
+                    return obj;
+                }
+            }
+        }
+        else
+        {
+            obj.gameObject.SetActive(true);
+            obj.transform.SetParent(parent);
+            PooledObjects.Remove(obj);
+        }
+
+        if (obj == null)
+            Debug.LogWarning($"Object of type {typeof(T)} doesn't exist in pool");
+        
+        return obj;
+    }
 
     public static void Release<T>(T obj) where T : MonoBehaviour
     {
+        if (obj is IReleasable releasable)
+            releasable.Dispose();
+        
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(null);
         obj.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);

@@ -10,11 +10,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
     private static NetworkController _instance;
     
     private string _lobbyName;
-    private PlayerView _playerView;
+    public static PlayerView PlayerView;
 
     public static event Action Disconnected;
-
-    public static Dictionary<string, CharacterView> CharacterViews = new();
 
     private void Awake()
     {
@@ -30,9 +28,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    public static bool JoinLobby(string lobbyName)
+    public static bool JoinRoom(string roomName)
     {
-        return PhotonNetwork.JoinLobby(new TypedLobby(lobbyName, LobbyType.SqlLobby));
+        Debug.LogWarning("Try join room");
+
+        return PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions(), TypedLobby.Default);
     }
 
     public static void TryToConnect()
@@ -46,35 +46,22 @@ public class NetworkController : MonoBehaviourPunCallbacks
         Disconnected?.Invoke();
     }
 
-    public override void OnLobbyStatisticsUpdate(List<TypedLobbyInfo> lobbyStatistics)
+    public override void OnJoinedRoom()
     {
-        base.OnLobbyStatisticsUpdate(lobbyStatistics);
+        base.OnJoinedRoom();
+
+        Debug.LogWarning("JOINED ROOM");
+        PlayerView = Pool.GetPun<PlayerView>();
+        PlayerView.Init();
     }
 
-    public override void OnJoinedLobby()
+    public override void OnLeftRoom()
     {
-        base.OnJoinedLobby();
-
-        _playerView = Pool.Get<PlayerView>();
-        
-        var playerId = PhotonNetwork.LocalPlayer.UserId;
-        photonView.RPC("CreateCharacter", RpcTarget.AllBuffered, playerId);
-    }
-
-    public override void OnLeftLobby()
-    {
-        base.OnLeftLobby();
+        base.OnLeftRoom();
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-    }
-
-    [PunRPC]
-    private void CreateCharacter(string id)
-    {
-        var character = Pool.Get<CharacterView>(_playerView.Canvas.transform);
-        CharacterViews.Add(id, character);
     }
 }
