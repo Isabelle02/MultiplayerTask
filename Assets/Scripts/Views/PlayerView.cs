@@ -121,7 +121,6 @@ public class PlayerView : MonoBehaviourPun
         character.Init(id, Color);
         _leftColors.RemoveAt(colorIndex);
         CharacterViews.Add(id, character);
-        Debug.LogError($"added character {Id}");
     }
     
     [PunRPC]

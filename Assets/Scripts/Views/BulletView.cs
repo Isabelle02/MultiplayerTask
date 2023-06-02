@@ -27,12 +27,10 @@ public class BulletView : MonoBehaviour, IReleasable
     
     private void OnTriggerEnter2D(Collider2D collider2d)
     {
-        Debug.Log("trigger bullet");
         if (collider2d.TryGetComponent(out CharacterView characterView))
             if (Id == characterView.Id || PlayerView.CharacterView == characterView && Id != characterView.Id)
                 return;
         
-        Debug.Log($"bullet {Id} triggered");
         Pool.Release(this);
     }
 

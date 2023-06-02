@@ -13,7 +13,7 @@ public class MatchCompletionPopup : Popup
         
         if (viewParam is not Param param)
         {
-            Debug.LogError("MatchCompletionPopup: Not Found ViewParam");
+            Debug.LogError("[MatchCompletionPopup] Not Found ViewParam");
             return;
         }
         

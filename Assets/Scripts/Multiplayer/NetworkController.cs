@@ -58,7 +58,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) 
             return;
         
-        Debug.LogWarning("JOINED ROOM");
+        Debug.LogWarning("YOU JOINED ROOM");
         PlayerView = Pool.GetPun<PlayerView>();
         PlayerView.Init();
     }
@@ -67,7 +67,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         base.OnPlayerEnteredRoom(newPlayer);
         
-        Debug.LogWarning("JOINED ROOM");
+        Debug.LogWarning("ANOTHER PLAYER JOINED ROOM");
         PlayerView = Pool.GetPun<PlayerView>();
         PlayerView.Init();
     }

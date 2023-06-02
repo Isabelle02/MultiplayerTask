@@ -21,8 +21,6 @@ public class CharacterView : MonoBehaviour
     {
         if (other.TryGetComponent(out BulletView bullet) && PlayerView.CharacterView == this && Id != bullet.Id)
         {
-            Debug.Log($"character {Id} triggered bullet {bullet.Id}");
-
             Damaged?.Invoke(bullet.DamageValue);
             Pool.Release(bullet);
         }

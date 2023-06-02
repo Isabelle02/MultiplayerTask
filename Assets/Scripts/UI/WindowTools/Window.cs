@@ -9,9 +9,9 @@ public abstract class Window : MonoBehaviour
     }
 
     public bool IsActive => gameObject.activeSelf;
-    
-    public abstract void OnOpen(Window.ViewParam viewParam);
-    public abstract void OnClose();
+
+    protected abstract void OnOpen(Window.ViewParam viewParam);
+    protected abstract void OnClose();
 
     public void Open(Window.ViewParam viewParam)
     {

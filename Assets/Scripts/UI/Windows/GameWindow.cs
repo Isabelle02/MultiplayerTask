@@ -8,8 +8,8 @@ public class GameWindow : Window
     [SerializeField] private PlayerHandlerView _handler;
     [SerializeField] private Button _shootButton;
     [SerializeField] private Text _coinAmountText;
-    
-    public override void OnOpen(ViewParam viewParam)
+
+    protected override void OnOpen(ViewParam viewParam)
     {
         _hpFillImage.fillAmount = 1f;
         _coinAmountText.text = CurrencyManager.Coins.ToString();
@@ -68,7 +68,7 @@ public class GameWindow : Window
         PopupManager.Open<PausePopup>();
     }
 
-    public override void OnClose()
+    protected override void OnClose()
     {
         _pauseButton.onClick.RemoveListener(OnPauseButtonClick);
         _shootButton.onClick.RemoveListener(SendShoot);

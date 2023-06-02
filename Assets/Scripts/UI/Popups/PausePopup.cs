@@ -33,7 +33,7 @@ public class PausePopup : Popup
     {
         PopupManager.CloseLast();
         WindowManager.Open<LobbyWindow>();
-        SceneHandler.Change("LobbyScene");
+        SceneHandler.Change(SceneHandler.LobbyScene);
     }
 
     private async void OnSoundCheckBoxValueChanged(bool value)

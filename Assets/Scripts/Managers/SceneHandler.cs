@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public static class SceneHandler
 {
+    public static string LoadingScene => "LoadingScene";
+    public static string LobbyScene => "LobbyScene";
+    public static string GameScene => "GameScene";
+    
     public static event Action<string> SceneLoaded;
     
     public static async void Load(string sceneName)

@@ -10,7 +10,7 @@ public class LobbyWindow : Window
     [SerializeField] private Button _createRoomButton;
     [SerializeField] private Button _enterRoomButton;
 
-    public override void OnOpen(ViewParam viewParam)
+    protected override void OnOpen(ViewParam viewParam)
     {
         SceneHandler.SceneLoaded += OnGameSceneLoaded;
         
@@ -30,25 +30,17 @@ public class LobbyWindow : Window
     private void OnEnterRoomClick()
     {
         if (NetworkController.JoinRoom(_existingRoomName.text))
-        {
-            SceneHandler.Load("GameScene");
-        }
+            SceneHandler.Load(SceneHandler.GameScene);
         else
-        {
             NetworkController.TryToConnect();
-        }
     }
 
     private void OnCreateRoomClick()
     {
         if (NetworkController.CreateRoom(_newRoomName.text))
-        {
-            SceneHandler.Load("GameScene");
-        }
+            SceneHandler.Load(SceneHandler.GameScene);
         else
-        {
             NetworkController.TryToConnect();
-        }
     }
 
     private async void OnSoundCheckBoxValueChanged(bool value)
@@ -59,7 +51,7 @@ public class LobbyWindow : Window
         SoundManager.IsOn = !value;
     }
 
-    public override void OnClose()
+    protected override void OnClose()
     {
         SceneHandler.SceneLoaded -= OnGameSceneLoaded;
         _soundToggle.onValueChanged.RemoveListener(OnSoundCheckBoxValueChanged);
