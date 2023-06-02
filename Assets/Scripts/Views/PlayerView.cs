@@ -11,7 +11,6 @@ public class PlayerView : MonoBehaviourPun
     private readonly List<Color> _leftColors = new();
 
     private int _hpValue;
-    private int _coinReward;
     private float _passTime;
 
     private static readonly Dictionary<string, CharacterView> CharacterViews = new();
@@ -31,11 +30,13 @@ public class PlayerView : MonoBehaviourPun
         }
     }
     
-    public static CharacterView CharacterView { get; private set; }
     private static Bounds CameraBounds => CameraManager.GameCamera.Bounds();
     private static Vector3 RandomPosition => new (Random.Range(CameraBounds.min.x, CameraBounds.max.x),
         Random.Range(CameraBounds.min.y, CameraBounds.max.y));
+
     private static string Id => PhotonNetwork.LocalPlayer.UserId;
+    public int CoinReward { get; private set; }
+    public static CharacterView CharacterView { get; private set; }
     public static Color Color { get; private set; }
 
     private void Awake()
@@ -74,7 +75,7 @@ public class PlayerView : MonoBehaviourPun
 
     private void OnCoinCollected(int amount)
     {
-        _coinReward += amount - CurrencyManager.Coins;
+        CoinReward += amount - CurrencyManager.Coins;
     }
 
     private void OnCharacterDamaged(int damage)
@@ -82,7 +83,7 @@ public class PlayerView : MonoBehaviourPun
         HpValue -= damage;
         if (HpValue <= 0)
         {
-            PopupManager.Open<MatchCompletionPopup>(new MatchCompletionPopup.Param(false, _coinReward));
+            PopupManager.Open<MatchCompletionPopup>(new MatchCompletionPopup.Param(false, CoinReward));
         }
     }
 
@@ -93,8 +94,7 @@ public class PlayerView : MonoBehaviourPun
 
     public void SendShoot()
     {
-        var characterTransform = CharacterViews[Id].transform;
-        photonView.RPC("Shoot", RpcTarget.AllBuffered, characterTransform.position, characterTransform.rotation);
+        photonView.RPC("Shoot", RpcTarget.AllBuffered, Id);
     }
 
     public void Disconnect()
@@ -118,18 +118,18 @@ public class PlayerView : MonoBehaviourPun
         var character = Pool.Get<CharacterView>(transform);
         character.transform.position = position;
         Color = _leftColors[colorIndex];
-        character.SetColor(Color);
+        character.Init(id, Color);
         _leftColors.RemoveAt(colorIndex);
-        Debug.Log(CharacterViews.Count);
         CharacterViews.Add(id, character);
         Debug.LogError($"added character {Id}");
     }
     
     [PunRPC]
-    private void Shoot(Vector3 position, Quaternion rotation)
+    private void Shoot(string id)
     {
-        var bullet = Pool.Get<BulletView>(transform);
-        bullet.Run(position, rotation);
+        var characterTransform = CharacterViews[id].transform;
+        var bullet = Pool.Get<BulletView>();
+        bullet.Run(id, characterTransform.position, characterTransform.rotation);
     }
 
     [PunRPC]

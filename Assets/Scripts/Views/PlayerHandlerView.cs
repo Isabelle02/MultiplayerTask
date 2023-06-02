@@ -9,7 +9,8 @@ public class PlayerHandlerView : MonoBehaviour
     private bool _isJoystickCaptured;
     private Vector3 _previousMousePosition;
 
-    public Vector3 MovingOffset => (transform.position - _joystickStartPos) / 100;
+    private Vector3 MovingDistance => transform.position - _joystickStartPos;
+    public Vector3 MovingOffset => MovingDistance.normalized * MovingDistance.magnitude / _joystickBounds.radius;
 
     private void Awake()
     {
@@ -24,6 +25,9 @@ public class PlayerHandlerView : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        if (!_isJoystickCaptured)
+            return;
+        
         var mousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
         var dist = mousePosition - _previousMousePosition;
         var newPos = transform.position + dist;

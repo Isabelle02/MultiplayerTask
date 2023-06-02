@@ -11,6 +11,7 @@ public class GameWindow : Window
     
     public override void OnOpen(ViewParam viewParam)
     {
+        _hpFillImage.fillAmount = 1f;
         _coinAmountText.text = CurrencyManager.Coins.ToString();
         
         _pauseButton.onClick.AddListener(OnPauseButtonClick);
@@ -72,7 +73,7 @@ public class GameWindow : Window
         _pauseButton.onClick.RemoveListener(OnPauseButtonClick);
         _shootButton.onClick.RemoveListener(SendShoot);
 
-        PlayerView.Inited += OnPlayerInited;
+        PlayerView.Inited -= OnPlayerInited;
         PlayerView.HpChanged -= OnHpChanged;
         PopupManager.Closed -= OnPausePopupClosed;
         CurrencyManager.CoinCollect -= OnCoinCollected;

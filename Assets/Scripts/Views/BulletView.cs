@@ -8,6 +8,7 @@ public class BulletView : MonoBehaviour, IReleasable
     private Collider2D _collider2D;
 
     public int DamageValue => 1;
+    public string Id { get; private set; }
 
     private void Awake()
     {
@@ -23,18 +24,21 @@ public class BulletView : MonoBehaviour, IReleasable
         if (!_collider2D.bounds.IsInBounds(CameraManager.GameCamera.Bounds())) 
             Pool.Release(this);
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
+    
+    private void OnTriggerEnter2D(Collider2D collider2d)
     {
-        if (other.TryGetComponent(out CharacterView character) && PlayerView.CharacterView == character)
-            return;
+        Debug.Log("trigger bullet");
+        if (collider2d.TryGetComponent(out CharacterView characterView))
+            if (Id == characterView.Id || PlayerView.CharacterView == characterView && Id != characterView.Id)
+                return;
         
-        Debug.LogWarning($"{other.name}");
+        Debug.Log($"bullet {Id} triggered");
         Pool.Release(this);
     }
 
-    public void Run(Vector3 position, Quaternion rotation)
+    public void Run(string id, Vector3 position, Quaternion rotation)
     {
+        Id = id;
         transform.position = position;
         transform.rotation = rotation;
         _speed = 10f;

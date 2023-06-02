@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,6 +49,6 @@ public class PausePopup : Popup
         _playButton.onClick.RemoveListener(OnPlayButtonClicked);
         _mainMenuButton.onClick.RemoveListener(OnMainMenuButtonClicked);
         _soundToggle.onValueChanged.RemoveListener(OnSoundCheckBoxValueChanged);
-        NetworkController.Disconnected += OnDisconnected;
+        NetworkController.Disconnected -= OnDisconnected;
     }
 }

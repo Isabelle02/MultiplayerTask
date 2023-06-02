@@ -72,6 +72,14 @@ public class NetworkController : MonoBehaviourPunCallbacks
         PlayerView.Init();
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            PopupManager.Open<MatchCompletionPopup>(new MatchCompletionPopup.Param(true, PlayerView.CoinReward));
+    }
+
     public static void Disconnect()
     {
         if (PlayerView)

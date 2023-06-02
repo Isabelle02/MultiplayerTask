@@ -10,6 +10,7 @@ public class CharacterView : MonoBehaviour
     public event Action<int> Damaged;
 
     public Vector2 Size => _collider2D.bounds.size;
+    public string Id { get; private set; }
 
     private void Awake()
     {
@@ -18,20 +19,26 @@ public class CharacterView : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent(out BulletView bullet) && PlayerView.CharacterView != this)
+        if (other.TryGetComponent(out BulletView bullet) && PlayerView.CharacterView == this && Id != bullet.Id)
         {
+            Debug.Log($"character {Id} triggered bullet {bullet.Id}");
+
             Damaged?.Invoke(bullet.DamageValue);
+            Pool.Release(bullet);
         }
 
-        if (other.TryGetComponent(out CoinView coin) && PlayerView.CharacterView == this)
+        if (other.TryGetComponent(out CoinView coin))
         {
-            CurrencyManager.Coins += coin.Value;
+            if (PlayerView.CharacterView == this)
+                CurrencyManager.Coins += coin.Value;
+            
             Pool.Release(coin);
         }
     }
 
-    public void SetColor(Color color)
+    public void Init(string id, Color color)
     {
+        Id = id;
         _icon.color = color;
     }
 }
