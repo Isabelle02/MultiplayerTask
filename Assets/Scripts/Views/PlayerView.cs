@@ -142,10 +142,10 @@ public class PlayerView : MonoBehaviourPun
         if (vector != Vector3.zero)
             characterTransform.LookAt2D(vector);
         
-        var min = new Vector2(-CameraBounds.size.x + size.x / 2,
-            -CameraBounds.size.y + size.y / 2);
-        var max = new Vector2(CameraBounds.size.x - size.x / 2,
-            CameraBounds.size.y - size.y / 2);
+        var min = new Vector2(-CameraBounds.size.x / 2 + size.x / 2,
+            -CameraBounds.size.y / 2 + size.y / 2);
+        var max = new Vector2(CameraBounds.size.x / 2 - size.x / 2,
+            CameraBounds.size.y / 2 - size.y / 2);
                 
         var targetX = Mathf.Clamp(characterTransform.position.x, min.x, max.x);
         var targetY = Mathf.Clamp(characterTransform.position.y, min.y, max.y);

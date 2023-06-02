@@ -1,5 +1,4 @@
 ﻿using System;
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -56,26 +55,32 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) 
+            return;
+        
         Debug.LogWarning("JOINED ROOM");
         PlayerView = Pool.GetPun<PlayerView>();
         PlayerView.Init();
     }
 
-    public override void OnLeftRoom()
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        base.OnLeftRoom();
-    }
-
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+        base.OnPlayerEnteredRoom(newPlayer);
+        
+        Debug.LogWarning("JOINED ROOM");
+        PlayerView = Pool.GetPun<PlayerView>();
+        PlayerView.Init();
     }
 
     public static void Disconnect()
     {
-        PlayerView.Disconnect();
+        if (PlayerView)
+        {
+            PlayerView.Disconnect();
+            PlayerView = null;
+        }
+        
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-        PlayerView = null;
     }
 }

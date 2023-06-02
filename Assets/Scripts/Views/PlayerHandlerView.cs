@@ -16,33 +16,28 @@ public class PlayerHandlerView : MonoBehaviour
         _joystickStartPos = transform.position;
     }
 
-    private void Update()
+    private void OnMouseDown()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            var ray = CameraManager.UiCamera.ScreenPointToRay(Input.mousePosition);
-            var hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-            _isJoystickCaptured = hit.collider == _joystick;
-            _previousMousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
-        }
+        _isJoystickCaptured = true;
+        _previousMousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
+    }
 
-        if (Input.GetMouseButton(0) && _isJoystickCaptured)
-        {
-            var mousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
-            var dist = mousePosition - _previousMousePosition;
-            var newPos = transform.position + dist;
+    private void OnMouseDrag()
+    {
+        var mousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
+        var dist = mousePosition - _previousMousePosition;
+        var newPos = transform.position + dist;
 
-            var targetBounds = new Bounds(newPos, _joystick.bounds.size);
-            if (targetBounds.IsInBounds(_joystickBounds.bounds))
-                transform.SetPositionXY(newPos.x, newPos.y);
+        var targetBounds = new Bounds(newPos, _joystick.bounds.size);
+        if (targetBounds.IsInBounds(_joystickBounds.bounds))
+            transform.SetPositionXY(newPos.x, newPos.y);
 
-            _previousMousePosition = mousePosition;
-        }
-        
-        if (Input.GetMouseButtonUp(0) && _isJoystickCaptured)
-        {
-            transform.position = _joystickStartPos;
-            _isJoystickCaptured = false;
-        }
+        _previousMousePosition = mousePosition;
+    }
+
+    private void OnMouseUp()
+    {
+        _isJoystickCaptured = false;
+        transform.position = _joystickStartPos;
     }
 }
