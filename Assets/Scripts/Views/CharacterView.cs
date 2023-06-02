@@ -3,26 +3,35 @@ using UnityEngine;
 
 public class CharacterView : MonoBehaviour
 {
-    public event Action<int> Damaged;
+    [SerializeField] private SpriteRenderer _icon;
+
+    private Collider2D _collider2D;
     
-    public Collider2D Collider2D { get; private set; }
+    public event Action<int> Damaged;
+
+    public Vector2 Size => _collider2D.bounds.size;
 
     private void Awake()
     {
-        Collider2D = GetComponent<Collider2D>();
+        _collider2D = GetComponent<Collider2D>();
     }
-
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent(out BulletView bullet))
+        if (other.TryGetComponent(out BulletView bullet) && PlayerView.CharacterView != this)
         {
             Damaged?.Invoke(bullet.DamageValue);
         }
 
-        if (other.TryGetComponent(out CoinView coin))
+        if (other.TryGetComponent(out CoinView coin) && PlayerView.CharacterView == this)
         {
             CurrencyManager.Coins += coin.Value;
             Pool.Release(coin);
         }
+    }
+
+    public void SetColor(Color color)
+    {
+        _icon.color = color;
     }
 }

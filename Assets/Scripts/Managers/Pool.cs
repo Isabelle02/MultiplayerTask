@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Photon.Pun;
-using UnityEditor;
 using UnityEngine;
 
 public class Pool : MonoBehaviour

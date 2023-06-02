@@ -9,6 +9,8 @@ public class MatchCompletionPopup : Popup
     
     protected override void OnOpen(ViewParam viewParam)
     {
+        NetworkController.Disconnect();
+        
         if (viewParam is not Param param)
         {
             Debug.LogError("MatchCompletionPopup: Not Found ViewParam");

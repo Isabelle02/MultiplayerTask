@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,18 +11,13 @@ public class PausePopup : Popup
     
     protected override void OnOpen(ViewParam viewParam)
     {
-        SceneHandler.SceneLoaded += OnLobbySceneLoaded;
-        
         _soundToggle.isOn = !SoundManager.IsOn;
         
         _playButton.onClick.AddListener(OnPlayButtonClicked);
         _mainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
         _soundToggle.onValueChanged.AddListener(OnSoundCheckBoxValueChanged);
-    }
 
-    private void OnLobbySceneLoaded()
-    {
-        WindowManager.Open<LobbyWindow>();
+        NetworkController.Disconnected += OnDisconnected;
     }
 
     private void OnPlayButtonClicked()
@@ -31,8 +27,14 @@ public class PausePopup : Popup
 
     private void OnMainMenuButtonClicked()
     {
+        NetworkController.Disconnect();
+    }
+
+    private void OnDisconnected()
+    {
         PopupManager.CloseLast();
-        SceneHandler.Load("LobbyScene");
+        WindowManager.Open<LobbyWindow>();
+        SceneHandler.Change("LobbyScene");
     }
 
     private async void OnSoundCheckBoxValueChanged(bool value)
@@ -45,9 +47,9 @@ public class PausePopup : Popup
 
     protected override void OnClose()
     {
-        SceneHandler.SceneLoaded -= OnLobbySceneLoaded;
         _playButton.onClick.RemoveListener(OnPlayButtonClicked);
         _mainMenuButton.onClick.RemoveListener(OnMainMenuButtonClicked);
         _soundToggle.onValueChanged.RemoveListener(OnSoundCheckBoxValueChanged);
+        NetworkController.Disconnected += OnDisconnected;
     }
 }

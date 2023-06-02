@@ -5,7 +5,7 @@ public abstract class Window : MonoBehaviour
     private void Awake()
     {
         var canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        canvas.worldCamera = CameraManager.UiCamera;
     }
 
     public bool IsActive => gameObject.activeSelf;

@@ -5,7 +5,7 @@ public abstract class Popup : MonoBehaviour
     private void Awake()
     {
         var canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        canvas.worldCamera = CameraManager.UiCamera;
     }
 
     protected abstract void OnOpen(ViewParam viewParam);

@@ -9,15 +9,4 @@ public static class CameraExtensions
         var camPosition = camera.transform.position;
         return new Bounds(camPosition, new Vector3(camWidth, camHeight));
     }
-
-    public static T GetObject<T>(this Vector3 position)
-    {
-        var ray = Camera.main.ScreenPointToRay(position);
-        var hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity,  LayerMask.GetMask("UI"));
-        if (hit.collider != null)
-            if (hit.collider.gameObject.TryGetComponent(out T o))
-                return o;
-
-        return default;
-    }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -10,7 +9,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     private static NetworkController _instance;
     
     private string _lobbyName;
-    public static PlayerView PlayerView;
+    public static PlayerView PlayerView { get; private set; }
 
     public static event Action Disconnected;
 
@@ -28,11 +27,18 @@ public class NetworkController : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    public static bool CreateRoom(string roomName)
+    {
+        Debug.LogWarning("[NetworkController] Creating Room");
+
+        return PhotonNetwork.CreateRoom(roomName);
+    }
+
     public static bool JoinRoom(string roomName)
     {
-        Debug.LogWarning("Try join room");
+        Debug.LogWarning("[NetworkController] Joining Room");
 
-        return PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions(), TypedLobby.Default);
+        return PhotonNetwork.JoinRoom(roomName);
     }
 
     public static void TryToConnect()
@@ -63,5 +69,13 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+    }
+
+    public static void Disconnect()
+    {
+        PlayerView.Disconnect();
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        PlayerView = null;
     }
 }

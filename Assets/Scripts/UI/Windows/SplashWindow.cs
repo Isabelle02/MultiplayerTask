@@ -12,10 +12,13 @@ public class SplashWindow : Window
         _fadeGroup.DoFade(1f, _fadingAnimDuration).GetAwaiter().OnCompleted(() => SceneHandler.Load("LobbyScene"));
     }
 
-    private void OnLobbySceneLoaded()
+    private void OnLobbySceneLoaded(string sceneName)
     {
-        SoundManager.Play(Sound.Main, true);
-        WindowManager.Open<LobbyWindow>();
+        if (sceneName == "LobbyScene")
+        {
+            SoundManager.Play(Sound.Main, true);
+            WindowManager.Open<LobbyWindow>();
+        }
     }
 
     public override void OnClose()

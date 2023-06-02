@@ -415,7 +415,7 @@ GameObject:
   - component: {fileID: 7719890719647494308}
   - component: {fileID: 6127804137662015137}
   m_Layer: 5
-  m_Name: ExistingLobbyInputField
+  m_Name: ExistingRoomInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -440,7 +440,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -0.000020504, y: 283}
+  m_AnchoredPosition: {x: -0.51192, y: 166}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &453818809615784718
@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 4515202451551916578}
   - component: {fileID: 8373985949043850977}
   m_Layer: 5
-  m_Name: EnterLobbyButton
+  m_Name: EnterRoomButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -746,7 +746,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 146}
+  m_AnchoredPosition: {x: -0.5119, y: 66}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6874132936565032440
@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 8311907011279345110}
   - component: {fileID: 2029186490137054411}
   m_Layer: 5
-  m_Name: CreateLobbyButton
+  m_Name: CreateRoomButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1025,7 +1025,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -301}
+  m_AnchoredPosition: {x: 0, y: -170}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1214895317971513237
@@ -1123,7 +1123,7 @@ GameObject:
   - component: {fileID: 6912109097584418954}
   - component: {fileID: 562428761101850448}
   m_Layer: 5
-  m_Name: NewLobbyInputField
+  m_Name: NewRoomInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1148,7 +1148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000020504, y: -160}
+  m_AnchoredPosition: {x: -0.000020504, y: -70}
   m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2783896662332301164
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundToggle: {fileID: 6689118044511074162}
-  _newLobbyName: {fileID: 562428761101850448}
-  _existingLobbyName: {fileID: 6127804137662015137}
-  _createLobby: {fileID: 2029186490137054411}
-  _enterLobby: {fileID: 8373985949043850977}
+  _newRoomName: {fileID: 562428761101850448}
+  _existingRoomName: {fileID: 6127804137662015137}
+  _createRoomButton: {fileID: 2029186490137054411}
+  _enterRoomButton: {fileID: 8373985949043850977}

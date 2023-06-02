@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class LobbyWindow : Window
 {
     [SerializeField] private Toggle _soundToggle;
-    [SerializeField] private InputField _newLobbyName;
-    [SerializeField] private InputField _existingLobbyName;
-    [SerializeField] private Button _createLobby;
-    [SerializeField] private Button _enterLobby;
+    [SerializeField] private InputField _newRoomName;
+    [SerializeField] private InputField _existingRoomName;
+    [SerializeField] private Button _createRoomButton;
+    [SerializeField] private Button _enterRoomButton;
 
     public override void OnOpen(ViewParam viewParam)
     {
@@ -17,18 +17,19 @@ public class LobbyWindow : Window
         _soundToggle.isOn = !SoundManager.IsOn;
         _soundToggle.onValueChanged.AddListener(OnSoundCheckBoxValueChanged);
         
-        _createLobby.onClick.AddListener(OnCreateLobbyClick);
-        _enterLobby.onClick.AddListener(OnEnterLobbyClick);
+        _createRoomButton.onClick.AddListener(OnCreateRoomClick);
+        _enterRoomButton.onClick.AddListener(OnEnterRoomClick);
     }
 
-    private void OnGameSceneLoaded()
+    private void OnGameSceneLoaded(string sceneName)
     {
-        WindowManager.Open<GameWindow>();
+        if (sceneName == "GameScene")
+            WindowManager.Open<GameWindow>();
     }
 
-    private void OnEnterLobbyClick()
+    private void OnEnterRoomClick()
     {
-        if (NetworkController.JoinRoom(_existingLobbyName.text))
+        if (NetworkController.JoinRoom(_existingRoomName.text))
         {
             SceneHandler.Load("GameScene");
         }
@@ -38,9 +39,9 @@ public class LobbyWindow : Window
         }
     }
 
-    private void OnCreateLobbyClick()
+    private void OnCreateRoomClick()
     {
-        if (NetworkController.JoinRoom(_newLobbyName.text))
+        if (NetworkController.CreateRoom(_newRoomName.text))
         {
             SceneHandler.Load("GameScene");
         }
@@ -62,7 +63,7 @@ public class LobbyWindow : Window
     {
         SceneHandler.SceneLoaded -= OnGameSceneLoaded;
         _soundToggle.onValueChanged.RemoveListener(OnSoundCheckBoxValueChanged);
-        _createLobby.onClick.RemoveListener(OnCreateLobbyClick);
-        _enterLobby.onClick.RemoveListener(OnEnterLobbyClick);
+        _createRoomButton.onClick.RemoveListener(OnCreateRoomClick);
+        _enterRoomButton.onClick.RemoveListener(OnEnterRoomClick);
     }
 }

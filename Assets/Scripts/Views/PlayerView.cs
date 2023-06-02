@@ -6,16 +6,19 @@ using Random = UnityEngine.Random;
 
 public class PlayerView : MonoBehaviourPun
 {
-    private CharacterView _characterView;
+    [SerializeField] private Color[] _colors;
+
+    private readonly List<Color> _leftColors = new();
+
     private int _hpValue;
     private int _coinReward;
     private float _passTime;
 
-    private Dictionary<string, CharacterView> CharacterViews = new();
+    private static readonly Dictionary<string, CharacterView> CharacterViews = new();
 
     private const float CoinSpawnInterval = 2f;
-    private const float CoinRadius = 0.5f;
-    
+
+    public static event Action Inited;
     public static event Action<int> HpChanged;
     
     private int HpValue
@@ -28,22 +31,30 @@ public class PlayerView : MonoBehaviourPun
         }
     }
     
-    private static Bounds CameraBounds => Camera.main.Bounds();
-    private string Id => PhotonNetwork.LocalPlayer.UserId;
+    public static CharacterView CharacterView { get; private set; }
+    private static Bounds CameraBounds => CameraManager.GameCamera.Bounds();
+    private static Vector3 RandomPosition => new (Random.Range(CameraBounds.min.x, CameraBounds.max.x),
+        Random.Range(CameraBounds.min.y, CameraBounds.max.y));
+    private static string Id => PhotonNetwork.LocalPlayer.UserId;
+    public static Color Color { get; private set; }
 
     private void Awake()
     {
         HpValue = 100;
+        _leftColors.AddRange(_colors);
     }
 
     public void Init()
     {
-        photonView.RPC("CreateCharacter", RpcTarget.AllBuffered, Id);
+        var colorIndex = Random.Range(0, _leftColors.Count);
+        photonView.RPC("CreateCharacter", RpcTarget.AllBuffered, Id, RandomPosition, colorIndex);
 
-        _characterView = CharacterViews[Id];
-        _characterView.Damaged += OnCharacterDamaged;
+        CharacterView = CharacterViews[Id];
+        CharacterView.Damaged += OnCharacterDamaged;
 
         CurrencyManager.CoinCollect += OnCoinCollected;
+        
+        Inited?.Invoke();
     }
 
     private void Update()
@@ -57,9 +68,7 @@ public class PlayerView : MonoBehaviourPun
                 return;
             
             _passTime = 0;
-            var position = new Vector3(Random.Range(CameraBounds.min.x, CameraBounds.max.x),
-                Random.Range(CameraBounds.min.y, CameraBounds.max.y));
-            photonView.RPC("SpawnCoin", RpcTarget.AllBuffered, position);
+            photonView.RPC("SpawnCoin", RpcTarget.AllBuffered, RandomPosition);
         }
     }
 
@@ -88,6 +97,14 @@ public class PlayerView : MonoBehaviourPun
         photonView.RPC("Shoot", RpcTarget.AllBuffered, characterTransform.position, characterTransform.rotation);
     }
 
+    public void Disconnect()
+    {
+        photonView.RPC("ReleaseCharacter", RpcTarget.AllBuffered, Id);
+        CharacterViews.Clear();
+        CharacterView = null;
+        Pool.Release(this);
+    }
+
     [PunRPC]
     private void SpawnCoin(Vector3 position)
     {
@@ -96,11 +113,16 @@ public class PlayerView : MonoBehaviourPun
     }
     
     [PunRPC]
-    private void CreateCharacter(string id)
+    private void CreateCharacter(string id, Vector3 position, int colorIndex)
     {
         var character = Pool.Get<CharacterView>(transform);
-        Debug.LogError($"adding character {Id}");
+        character.transform.position = position;
+        Color = _leftColors[colorIndex];
+        character.SetColor(Color);
+        _leftColors.RemoveAt(colorIndex);
+        Debug.Log(CharacterViews.Count);
         CharacterViews.Add(id, character);
+        Debug.LogError($"added character {Id}");
     }
     
     [PunRPC]
@@ -114,7 +136,7 @@ public class PlayerView : MonoBehaviourPun
     private void Move(string id, Vector3 vector)
     {
         var character = CharacterViews[id];
-        var size = character.Collider2D.bounds.size;
+        var size = character.Size;
         var characterTransform = character.transform;
         characterTransform.Translate(vector, Space.World);
         if (vector != Vector3.zero)
@@ -128,5 +150,12 @@ public class PlayerView : MonoBehaviourPun
         var targetX = Mathf.Clamp(characterTransform.position.x, min.x, max.x);
         var targetY = Mathf.Clamp(characterTransform.position.y, min.y, max.y);
         characterTransform.SetPositionXY(targetX, targetY);
+    }
+
+    [PunRPC]
+    private void ReleaseCharacter(string id)
+    {
+        Pool.Release(CharacterViews[id]);
+        CharacterViews.Remove(id);
     }
 }

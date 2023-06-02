@@ -20,15 +20,15 @@ public class PlayerHandlerView : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = CameraManager.UiCamera.ScreenPointToRay(Input.mousePosition);
             var hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
             _isJoystickCaptured = hit.collider == _joystick;
-            _previousMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _previousMousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
         }
 
         if (Input.GetMouseButton(0) && _isJoystickCaptured)
         {
-            var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var mousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
             var dist = mousePosition - _previousMousePosition;
             var newPos = transform.position + dist;
 

@@ -4,16 +4,16 @@ using UnityEngine.SceneManagement;
 
 public static class SceneHandler
 {
-    public static event Action SceneLoaded;
+    public static event Action<string> SceneLoaded;
     
-    public static async void Load(string name)
+    public static async void Load(string sceneName)
     {
-        await SceneManager.LoadSceneAsync(name);
-        SceneLoaded?.Invoke();
+        await SceneManager.LoadSceneAsync(sceneName);
+        SceneLoaded?.Invoke(sceneName);
     }
 
-    public static async void Unload(string name)
+    public static void Change(string name)
     {
-        await SceneManager.UnloadSceneAsync(name);
+        SceneManager.LoadScene(name);
     }
 }

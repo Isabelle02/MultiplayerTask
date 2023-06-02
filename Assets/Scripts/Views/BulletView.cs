@@ -20,12 +20,16 @@ public class BulletView : MonoBehaviour, IReleasable
         transform.position = _bulletContainer.position;
         _bulletContainer.localPosition = Vector3.zero;
 
-        if (!_collider2D.bounds.IsInBounds(Camera.main.Bounds())) 
+        if (!_collider2D.bounds.IsInBounds(CameraManager.GameCamera.Bounds())) 
             Pool.Release(this);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.TryGetComponent(out CharacterView character) && PlayerView.CharacterView == character)
+            return;
+        
+        Debug.LogWarning($"{other.name}");
         Pool.Release(this);
     }
 

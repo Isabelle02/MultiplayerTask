@@ -16,9 +16,15 @@ public class GameWindow : Window
         _pauseButton.onClick.AddListener(OnPauseButtonClick);
         _shootButton.onClick.AddListener(SendShoot);
 
+        PlayerView.Inited += OnPlayerInited;
         PlayerView.HpChanged += OnHpChanged;
         PopupManager.Closed += OnPausePopupClosed;
         CurrencyManager.CoinCollect += OnCoinCollected;
+    }
+
+    private void OnPlayerInited()
+    {
+        _hpFillImage.color = PlayerView.Color;
     }
 
     private void Update()
@@ -48,12 +54,16 @@ public class GameWindow : Window
         if (popup is PausePopup)
         {
             _pauseButton.gameObject.SetActive(true);
+            _shootButton.gameObject.SetActive(true);
+            _handler.gameObject.SetActive(true);
         }
     }
     
     private void OnPauseButtonClick()
     {
         _pauseButton.gameObject.SetActive(false);
+        _shootButton.gameObject.SetActive(false);
+        _handler.gameObject.SetActive(false);
         PopupManager.Open<PausePopup>();
     }
 
@@ -62,6 +72,7 @@ public class GameWindow : Window
         _pauseButton.onClick.RemoveListener(OnPauseButtonClick);
         _shootButton.onClick.RemoveListener(SendShoot);
 
+        PlayerView.Inited += OnPlayerInited;
         PlayerView.HpChanged -= OnHpChanged;
         PopupManager.Closed -= OnPausePopupClosed;
         CurrencyManager.CoinCollect -= OnCoinCollected;
