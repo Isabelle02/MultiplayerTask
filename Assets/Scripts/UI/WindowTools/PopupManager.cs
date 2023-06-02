@@ -9,7 +9,8 @@ public class PopupManager : MonoBehaviour
     private static PopupManager _instance;
     private readonly Dictionary<Type, Popup> _popupsDictionary = new();
     private readonly Stack<Popup> _openedPopups = new();
-
+    
+    public static event Action<Popup> Opened;
     public static event Action<Popup> Closed;
 
     private void Awake()
@@ -31,9 +32,10 @@ public class PopupManager : MonoBehaviour
             _instance._popupsDictionary.Add(popupPrefab.GetType(), popupPrefab);
         }
 
-        var p = _instance._popupsDictionary[typeof(T)];
-        p.Open(viewParam);
-        _instance._openedPopups.Push(p);
+        var popupInstance = _instance._popupsDictionary[typeof(T)];
+        popupInstance.Open(viewParam);
+        _instance._openedPopups.Push(popupInstance);
+        Opened?.Invoke(popupInstance);
     }
     
     public static T Get<T>() where T : Popup

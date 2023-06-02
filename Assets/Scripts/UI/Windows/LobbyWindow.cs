@@ -23,7 +23,7 @@ public class LobbyWindow : Window
 
     private void OnGameSceneLoaded(string sceneName)
     {
-        if (sceneName == "GameScene")
+        if (sceneName == SceneHandler.GameScene)
             WindowManager.Open<GameWindow>();
     }
 

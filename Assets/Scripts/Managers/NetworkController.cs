@@ -55,10 +55,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
+        Debug.LogWarning("YOU JOINED ROOM");
         if (PhotonNetwork.CurrentRoom.PlayerCount <= 1) 
             return;
         
-        Debug.LogWarning("YOU JOINED ROOM");
         PlayerView = Pool.GetPun<PlayerView>();
         PlayerView.Init();
     }
