@@ -35,7 +35,7 @@ public class PlayerHandlerView : MonoBehaviour
             var newPos = transform.position + dist;
             
             var targetBounds = new Bounds(newPos, _joystick.bounds.size);
-            if (targetBounds.IsInBounds(_joystickBounds.bounds))
+            if (targetBounds.IsInCircleBounds(_joystickBounds.bounds))
                 transform.SetPositionXY(newPos.x, newPos.y);
 
             _previousMousePosition = mousePosition;
@@ -47,32 +47,4 @@ public class PlayerHandlerView : MonoBehaviour
             transform.position = _joystickStartPos;
         }
     }
-
-    // private void OnMouseDown()
-    // {
-    //     _isJoystickCaptured = true;
-    //     _previousMousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
-    // }
-    //
-    // private void OnMouseDrag()
-    // {
-    //     if (!_isJoystickCaptured)
-    //         return;
-    //     
-    //     var mousePosition = CameraManager.UiCamera.ScreenToWorldPoint(Input.mousePosition);
-    //     var dist = mousePosition - _previousMousePosition;
-    //     var newPos = transform.position + dist;
-    //
-    //     var targetBounds = new Bounds(newPos, _joystick.bounds.size);
-    //     if (targetBounds.IsInBounds(_joystickBounds.bounds))
-    //         transform.SetPositionXY(newPos.x, newPos.y);
-    //
-    //     _previousMousePosition = mousePosition;
-    // }
-    //
-    // private void OnMouseUp()
-    // {
-    //     _isJoystickCaptured = false;
-    //     transform.position = _joystickStartPos;
-    // }
 }

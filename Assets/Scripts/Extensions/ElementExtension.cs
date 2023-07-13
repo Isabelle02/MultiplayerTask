@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public static class ElementExtension
 {
@@ -20,5 +21,14 @@ public static class ElementExtension
     {
         return target.min.x <= other.max.x && target.max.x >= other.min.x &&
                target.min.y <= other.max.y && target.max.y >= other.min.y;
+    }
+    
+    public static bool IsInCircleBounds(this Bounds target, Bounds other)
+    {
+        var otherRadius = Math.Min(other.extents.x, other.extents.y);
+        var targetRadius = Math.Min(target.extents.x, target.extents.y);
+        
+        return Vector3.Distance(target.center, other.center) <= otherRadius + targetRadius &&
+               Vector3.Distance(target.center, other.center) <= otherRadius + targetRadius;
     }
 }
